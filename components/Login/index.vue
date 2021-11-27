@@ -27,14 +27,16 @@ export default {
     async login () {
       event.preventDefault()
       try {
-        await this.$auth.loginWith('local', {data: {
-          email: this.username,
-          password: this.password
-        }}).then((res) => this.$router.push('/'))
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.username,
+            password: this.password
+          }
+        }).then(this.$router.push('/'))
       } catch (e) {
         this.error = 'Usuario o contraseña incorrectos'
       }
-    },
+    }
   }
 }
 </script>

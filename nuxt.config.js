@@ -29,7 +29,7 @@ export default {
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -41,7 +41,7 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseURL: 'http://172.16.128.93:3000' 
+    baseURL: 'http://172.16.128.93:3000'
   },
 
   auth: {
@@ -50,16 +50,14 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'token',
-          maxAge: 1800,
-          //type: 'Bearer'
+          maxAge: 1800
         },
         user: {
-          property: 'user',
-         // autoFetch: true
+          property: 'user'
         },
         endpoints: {
-          login: { url: '/auth', method: 'post', propertyName: 'token'},
-          user: { url: '/auth/profile', method: 'get', propertyName: false },
+          login: { url: '/auth', method: 'post', propertyName: 'token' },
+          user: { url: '/auth/profile', method: 'get', propertyName: false }
         },
         AutoLogout: false
       }

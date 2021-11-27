@@ -11,7 +11,13 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {rel: 'stylesheet', href: "//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"},
+      {rel: 'stylesheet', href: "//cdn.quilljs.com/1.3.6/quill.snow.css"},
+      {rel: 'stylesheet', href: "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"}
+
+    ],
+    script: [
     ]
   },
 

@@ -59,13 +59,14 @@ export default {
           maxAge: 1800
         },
         user: {
-          property: 'user'
         },
         endpoints: {
           login: { url: '/auth', method: 'post', propertyName: 'token' },
-          user: { url: '/auth/profile', method: 'get', propertyName: false }
+          user: { url: '/auth/profile', method: 'get', 
+          logout: false,
+          propertyName: false }
         },
-        AutoLogout: false
+        autoLogout: false
       }
     }
   },

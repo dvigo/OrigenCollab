@@ -14,8 +14,7 @@
               v-card-title {{p[1]['quantity'] * p[1]['product'].price + '€'}}
               v-card-text {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
       v-row.cart_total
-        div#cart-total
-        | {{this.totalPrice}}€
+        div#card-total {{totalPrice}}€
       v-row.cart_action
         v-col
           v-btn Tramitar pedido
@@ -37,20 +36,11 @@ export default {
         return {
             user: this.$auth.user,
             cart: [],
+            totalPrice: 0
         }
     },
     mounted() {
         this.loadYji();
-    },
-    computed: {
-        totalPrice() {
-            var price = 0;
-            Array.from(this.cart.values()).forEach(function(value, i) {
-                console.log(value)
-                price += value.product.price * value.quantity
-            })
-            return price
-        },
     },
     methods: {
         getRandomColor() {
@@ -106,6 +96,10 @@ export default {
                     document.querySelector('#cart-users').innerHTML = strings.join('')
                 })
             })
+            self = this
+            ydoc.on('update', function(test, test2, test3, test4) {
+                self.updateTotal()
+            })
 
         },
         async updateCart(product, quantity) {
@@ -130,6 +124,13 @@ export default {
         async deleteProductCart(productId) {
             this.cart.delete(productId.toString())
         },
+        updateTotal() {
+            var price = 0
+            this.cart.forEach(function(p) {
+                price += p.product.price * p.quantity
+            });
+            this.totalPrice = price
+        }
     }
 }
 

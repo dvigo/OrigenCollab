@@ -6,18 +6,23 @@
           h2.text-center Cistella
       v-row.products
         v-col
-
           div#cart-products(v-for="p in cart")
             v-banner
               v-card-title {{p[1]['product'].name }}
             v-card.cart_product
+              button(v-on:click="deleteProductCart(p[1]['product'].id)" style="color:red") Delete
               v-card-title {{p[1]['quantity'] * p[1]['product'].price + '€'}}
-              v-card-body {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
+              v-card-text {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
+      v-row.cart_total
+        div#cart-total
+        | {{this.totalPrice}}€
       v-row.cart_action
         v-col
           v-btn Tramitar pedido
         v-col
           v-btn Seguir comprando
+      v-row
+        ul#cart-users
 
 </template>
 
@@ -41,6 +46,7 @@ export default {
         totalPrice() {
             var price = 0;
             Array.from(this.cart.values()).forEach(function(value, i) {
+                console.log(value)
                 price += value.product.price * value.quantity
             })
             return price

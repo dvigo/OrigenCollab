@@ -1,0 +1,12 @@
+.cart {
+    @media (min-width:320px)  { width: 100% !important; }
+    @media (min-width:481px)  { width: 100% !important; }
+    @media (min-width:641px)  { width: 70% !important; }
+    @media (min-width:961px)  { width: 50% !important; }
+    @media (min-width:1025px) { width: 40% !important;}
+    @media (min-width:1281px) { width: 30% !important; }
+}
+
+.cart_product {
+    margin: 10px 0px 10px;
+}

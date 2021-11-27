@@ -150,9 +150,8 @@ export default {
                             })
             }
         },
-        deleteProductCart(productId) {
-            console.log(productId)
-            this.cart.delete(productId)
+        async deleteProductCart(productId) {
+            this.cart.delete(productId.toString())
         },
     }
 }

@@ -20,10 +20,9 @@
                 <div id="cart">
                     </hr>
                     Cart products:
-                    <div v-for="product in cartAll" id="cart-products">
-                    {{product.quantity}} x {{ product.product.name }} <button v-on:click="deleteProductCart(product.product.id)" style="color:red">Delete</button>
+                    <div v-for="p in cart" id="cart-products">
+                    {{p[1]['quantity']}} x {{ p[1]['product'].name }} <button v-on:click="deleteProductCart(p[1]['product'].id)" style="color:red">Delete</button>
                     </div>
-
                     </hr>
                     Total:
                     <div id="cart-total">{{this.totalPrice}}€</div>
@@ -66,19 +65,14 @@ export default {
             if (this.cart && this.cart.length != 0) {
                 return Array.from(this.cart.values())
             }
-            console.log(this.cart)
             return []
         },
         totalPrice() {
             var price = 0;
-            this.cart.forEach(function(value, i) {
+            Array.from(this.cart.values()).forEach(function(value, i) {
                 price += value.product.price * value.quantity
             })
             return price
-        },
-        cartAll() {
-            console.log(Array.from(this.cart.values()))
-            return Array.from(this.cart.values())
         },
     },
     methods: {
@@ -102,7 +96,7 @@ export default {
                 });
             return result;
         },
-        getProduct(productId) {
+        async getProduct(productId) {
             var product_filtered = this.products.filter(p => p.id === productId)
             if (product_filtered.length <= 0) {
                 // Fetch from api
@@ -110,9 +104,14 @@ export default {
             }
             return product_filtered[0]
         },
-        loadYji() {
+        async loadYji() {
             const ydoc = new Y.Doc()
             this.cart = ydoc.getMap('cart')
+            this.cart.observe(event => {
+                this.$forceUpdate();
+
+            })
+
             const provider = new WebsocketProvider('ws://localhost:1234',
                 this.findGetParameter('room') ||  'no-room', ydoc)
 
@@ -130,18 +129,30 @@ export default {
                     document.querySelector('#cart-users').innerHTML = strings.join('')
                 })
             })
+
         },
-        updateCart(product, quantity) {
+        async updateCart(product, quantity) {
+            this.$forceUpdate();
             if (!quantity) {
                 quantity = document.getElementById('add-product-quantity-' + product.id).value || 1
             }
-            this.cart.set(product.id, {
-                        product: product,
-                        quantity: quantity,
-                        })
+            quantity = parseInt(quantity)
+            const existing_product = this.cart.get(product.id.toString())
+            if (existing_product) {
+                this.cart.set(product.id.toString(), {
+                            product: product,
+                            quantity: existing_product.quantity + quantity,
+                            })
+            } else {
+                this.cart.set(product.id.toString(), {
+                            product: product,
+                            quantity: quantity,
+                            })
+            }
         },
         deleteProductCart(productId) {
-            // this.cart.delete();
+            console.log(productId)
+            this.cart.delete(productId)
         },
     }
 }

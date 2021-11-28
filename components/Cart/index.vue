@@ -3,7 +3,7 @@
     v-container
       v-row
         v-col
-          h2.text-center Cistella
+          h2.text-center Cart
           v-select#cart-select(v-if="this.user && this.user.current_cart" :items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()" v-model="selectDefault")
         v-spacer
         v-col
@@ -34,7 +34,7 @@
         div#card-total {{totalPrice}}€
       v-row.cart_action(v-if="this.user && this.user.current_cart")
         v-col
-          v-btn Tramitar pedido
+          v-btn(v-on:click="checkoutCart") Checkout
         v-col
           v-btn Seguir comprando
       v-row
@@ -66,7 +66,6 @@ export default {
     computed: {
     },
     mounted() {
-        console.log(this.$store.getCurrentCart)
         this.loadYji();
     },
     created() {
@@ -83,6 +82,8 @@ export default {
                 });
     },
     methods: {
+        checkoutCart() {
+        },
         changeSelect(event) {
             var cart = this.available_carts.filter((r) => {
                     return r._id == this.selectDefault
@@ -110,7 +111,7 @@ export default {
                 this.updateTotal()
                 this.toggleTest()
                 self.$fetch;
-                this.$toast.success('Cart afegit correctament')
+                this.$toast.success('Cart correcly added')
             })
         },
         async newCartMembers() {
@@ -121,7 +122,7 @@ export default {
                     users.push(user)
             });
             await this.$axios.$patch('/cart/' + this.user.current_cart._id, {'users': users}).then((res) => {
-                this.$toast.success('Members afegits correctament')
+                this.$toast.success('Members correctly added')
                 this.toggleMembers()
             })
         },
@@ -216,7 +217,7 @@ export default {
                             quantity: quantity,
                             })
             }
-            this.$toast.success('Producte afegit correctament')
+            this.$toast.success('Product added correctly')
 
         },
         async deleteProductCart(productId) {

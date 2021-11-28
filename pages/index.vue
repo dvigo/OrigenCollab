@@ -15,10 +15,18 @@ import Product from '~/components/Product/index.vue'
   export default {
     data: () => ({
       model: 0,
-      images: [
-        'https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-        'https://images-ext-2.discordapp.net/external/NbU-dnGO_XCNjmfWyLFtLF_q1k9DarWh5k37qnQw_bc/%3Fauto%3Dcompress%26cs%3Dtinysrgb%26dpr%3D2%26h%3D650%26w%3D940/https/images.pexels.com/photos/950835/pexels-photo-950835.jpeg?width=617&height=409',
-      ],
+      images: [{
+        'id': 1,
+        'url': 'https://images.pexels.com/photos/1884581/pexels-photo-1884581.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+        'text': 'HackEPS2021',
+        'color': 'white'
+      },
+      {
+        'id': 2,
+        'url':'https://images-ext-2.discordapp.net/external/NbU-dnGO_XCNjmfWyLFtLF_q1k9DarWh5k37qnQw_bc/%3Fauto%3Dcompress%26cs%3Dtinysrgb%26dpr%3D2%26h%3D650%26w%3D940/https/images.pexels.com/photos/950835/pexels-photo-950835.jpeg?width=617&height=409',
+        'text': 'OrigenStudio',
+        'color': 'black'
+      }],
       products: Object,
     }),
     components: {

@@ -36,9 +36,6 @@
     </div>
 </template>
 
-<style scoped>
-@import '~/static/css/cart.css';
-</style>
 <script>
 import * as Y from 'yjs'
 import { WebsocketProvider } from 'y-websocket'

@@ -1,10 +1,10 @@
 <template lang="pug">
     v-carousel
-        v-carousel-item(v-for="(image, i) in images" :key="image")
-          v-img(:src="image" height="100%" tile)
+        v-carousel-item(v-for="(image, i) in images" :key="image.id")
+          v-img(:src="image.url" height="100%" tile)
             v-row.fill-height(align="center" justify="center")
-              div.text-h2
-                | Slide {{ i + 1 }}
+              div.text-h1(style="font-weight: bold")
+                | {{ image.text }}
 </template>
 
 <script> 

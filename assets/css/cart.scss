@@ -10,3 +10,27 @@
 .cart_product {
     margin: 10px 0px 10px;
 }
+
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: indigo;
+    text-align: center;
+    padding-top: 5px;
+  }
+
+  #cart {
+    background-color: #e9c46a;
+    height: 100%;
+}
+.add-to-cart {
+    background-color: yellow;
+    color: black;
+}
+
+.product-quantity {
+    color: white;
+    color: yellow;
+}

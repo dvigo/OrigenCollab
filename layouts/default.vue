@@ -10,7 +10,7 @@
           v-btn(icon v-bind="attrs" v-on="on")
             v-icon mdi-account
         v-list
-          v-list-item(v-if="!isAuthenticated" href="login")
+          v-list-item(v-if="!isAuthenticated" href="/login")
             v-list-item-icon
               v-icon mdi-account
             v-list-item-content Acceder
@@ -22,7 +22,7 @@
             v-list-item-icon
               v-icon mdi-run-fast
             v-list-item-content Salir
-      v-btn(icon @click.stop="rightDrawer = !rightDrawer")
+      v-btn(v-if="isAuthenticated" icon @click.stop="rightDrawer = !rightDrawer")
         v-icon mdi-cart
     v-main
       v-container
@@ -36,16 +36,16 @@
       v-list
         v-list-item
           Cart
-    v-navigation-drawer.cart(
+    v-navigation-drawer(
         v-model="leftDrawer"
         :left="left"
         temporary
         fixed
       )
+        .text-h4.categoryText Categorías
         v-row(v-for="category in categories"  v-bind:key="category._id" justify="center" align="center")
-          NuxtLink(:to="'/categories/'+category.name")
-            v-banner
-            .text-center {{category.name}}
+          NuxtLink.categoryLink(:to="'/categories/'+category.name")
+            .text-h5 {{category.name}}
     v-footer(
       :absolute="!fixed"
       app)
@@ -80,11 +80,16 @@ export default {
       rightDrawer: false,
       leftDrawer: false,
       title: 'CollabShop',
-      category: Object
+      categories: Object,
     }
   },
   async fetch() {
     await this.$axios.$get('/category').then( (res) => this.categories = res.categories);
+  },
+  created() {
+    this.$nuxt.$on('close-cart', () => {
+        this.closeCart()
+    })
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
@@ -92,6 +97,9 @@ export default {
   methods: {
     logout () {
       this.$auth.logout()
+    },
+    closeCart() {
+      this.rightDrawer = !this.rightDrawer
     }
   },
   components: {

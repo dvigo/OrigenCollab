@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app
-    v-row(justify="center" align="center")
-      h2.text-h2 {{ this.$route.params.name }}
+    div(justify="center" align="center")
+      h2.text-h2.categoryLink {{ this.$route.params.name }}
     v-row(justify="center" align="center")
       Product(v-for="product in products" v-bind:key="product._id" v-bind:product="product")
 </template>

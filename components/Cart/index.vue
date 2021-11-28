@@ -3,7 +3,7 @@
     v-container
       v-row
         v-col
-          h2.text-center Cistella
+          h2.text-center Carrito
       v-row.products
         v-col
           div#cart-products(v-for="p in cart")
@@ -19,9 +19,8 @@
         v-col
           v-btn Tramitar pedido
         v-col
-          v-btn Seguir comprando
-      v-row
-        ul#cart-users
+          v-btn(v-on:click="close") Seguir comprando
+      v-row#cart-users(justify="space-around")
 
 
 </template>
@@ -93,7 +92,7 @@ export default {
                 const strings = []
                 provider.awareness.getStates().forEach(state => {
                     if (state.user) {
-                        strings.push(`<li style="color:${state.user.color};">${state.user.name}</li>`)
+                        strings.push(`<span class="white--text text-h5 avatar">${state.user.name[0]}</span>`)
                     }
                     document.querySelector('#cart-users').innerHTML = strings.join('')
                 })
@@ -136,6 +135,9 @@ export default {
                 price += p.product.price * p.quantity
             });
             this.totalPrice = price
+        },
+        close() {
+          $nuxt.$emit('close-cart');
         }
     }
 }

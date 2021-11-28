@@ -6,3 +6,9 @@ export const getters = {
       return state.auth.user
     }
   }
+
+export const mutations = {
+  changeCurrentCart(state, cart) {
+      state.auth.user.current_cart = cart
+  }
+}

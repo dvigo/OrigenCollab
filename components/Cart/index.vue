@@ -4,7 +4,7 @@
       v-row
         v-col
           h2.text-center Cistella
-          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()")
+          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()" v-model="selectDefault")
         v-spacer
         v-col
           v-card-actions
@@ -55,12 +55,12 @@ export default {
             user: this.$auth.user,
             available_carts: [],
             cart: undefined,
-            rooms: [],
             totalPrice: 0,
             selectDefault: {
-                name: this.user?this.user.current_cart.name:'',
-                _id: this.user?this.user.current_cart._id:'',
-                }
+                name: this.user && this.user.current_cart?this.user.current_cart.name:'',
+                _id: this.user && this.user.current_cart?this.user.current_cart._id:'',
+                },
+            provider: undefined,
         }
     },
     computed: {
@@ -78,18 +78,30 @@ export default {
     },
     methods: {
         changeSelect(event) {
-            var value = document.getElementById('available_carts').value()
-            console.log(this.rooms)
-            //this.rooms.filter( ( r ) => {
-            //    return category.name === 'Sneakers';
-            //})[ 0 ].products;
+            var cart = this.available_carts.filter((r) => {
+                    return r._id == this.selectDefault
+            })
+            this.$store.commit('changeCurrentCart', cart[0])
+            this.$axios.$patch('/user/' + this.user.email, {'current_cart': this.selectDefault})
+            if (this.provider) {
+                console.log(this.provider)
+                this.provider.disconnect()
+            }
+            this.loadYji();
 
         },
         async createNewCart() {
             var name = document.getElementById('new-cart-name')
             self = this
             await this.$axios.$post('/cart', {'name': name?name.value:'New cart'}).then((res) => {
-                this.user.current_cart = res['carts'][0]
+                this.$axios.$patch('/user/' + this.user.email, {'current_cart': res['carts']._id})
+                this.$store.commit('changeCurrentCart', res['carts'])
+                this.selectDefault = {name: res['carts'].name, _id: res['carts']._id}
+                if (this.provider) {
+                    this.provider.disconnect()
+                }
+                this.loadYji();
+                this.updateTotal()
                 self.$fetch;
                 this.$toast.success('Cart afegit correctament')
             })
@@ -144,17 +156,20 @@ export default {
                 this.$forceUpdate();
 
             })
-
-            const provider = new WebsocketProvider('ws://localhost:1234',
+            if (this.provider) {
+                this.provider.disconnect()
+                this.provider = undefined
+            }
+            this.provider = new WebsocketProvider('ws://localhost:1234',
                 this.user.current_cart._id, ydoc)
 
-            provider.awareness.setLocalStateField('user', {
+            this.provider.awareness.setLocalStateField('user', {
                     name: this.user ? this.user.first_name + ' ' + this.user.last_name:'User ' + this.getRandomColor(),
                     color: this.user.current_cart.color?this.user.current_cart.color:this.getRandomColor()
             })
-            provider.awareness.on('change', () => {
+            this.provider.awareness.on('change', () => {
                 const strings = new Set()
-                provider.awareness.getStates().forEach(state => {
+                this.provider.awareness.getStates().forEach(state => {
                     if (state.user) {
                         strings.add(`<span class="white--text text-h5 avatar">${state.user.name[0]}</span>`)
                     }
@@ -190,7 +205,6 @@ export default {
 
         },
         async deleteProductCart(productId) {
-            console.log(productId)
             this.cart.delete(productId)
         },
         updateTotal() {

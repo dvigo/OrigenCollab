@@ -1,4 +1,34 @@
-# yjs-nuxt
+# CollabShop
+
+CollabShop provides a _next-generation_, _revolutionary_. _new paradigm_, way of shopping. Buy your Black Friday offers in group and buy more, buy better, buy faster. 
+
+For real tho, we have designed a fully interactive E-commerce website with multiple users, multiple carts, a split bill checkout page, items organized by categories, users and admins, end to end tests, _and many more_. Our user experience is so rich it will steal your wallet.
+
+With CollabShop you can buy with your spouse, your friends, your family, all at the same time with multiple sessions. We are talking a multi-pentatillion-dollar idea.
+
+Users see what you want to buy in real time and how many users are in the same session. Show off how much money you spend on items, now collaboratively!
+
+## Tech Stack
+
+Our stacks are as deep as our wallets!
+
+We have it all. We use *bleeding age* Vue.js with vuetify, a _supper well tested no bugs 100% guaranteed_ node.js backend (for real tho! It has tests!). We use a _non-decentralized_, _cyptodisrupting_ Mongo Database.
+
+AND ON TOP OF ALL OF THIS? We use Y.js to sync stuff IN FREAKING REALTIME WITH WEBSOCKETS MAN. WE ARE ON FIRE.
+
+## Challenges & What we learned
+
+CSS: CSS is hard. For real.
+Y.js: We had some trouble integrating everything together. BUT IT IS MAGIIIIC. It really is awesome. Although one needs to learn how to handle the data formats.
+Btw, the checkout process ~may~ have a bug.
+
+## Show me some photos
+
+![Screenshot1](HomePhoto.png)
+![Screenshot2](Items.png)
+![Screenshot3](sharedItems.png)
+![Screenshot4](Categories.png)
+![Screenshot5](checkout.png)
 
 ## Build Setup
 

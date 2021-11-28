@@ -12,6 +12,10 @@
             v-list-item-icon
               v-icon mdi-account
             v-list-item-content Acceder
+          v-list-item(v-if="!isAuthenticated" href="register")
+            v-list-item-icon
+              v-icon mdi-account-plus
+            v-list-item-content Register
           // v-list-item(v-for="item in items" :href="item.action" :target="(item.target) ? item.target : ''")
             // v-list-item-icon(v-if="item.icon")
               // v-icon {{ item.icon }}

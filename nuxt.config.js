@@ -72,6 +72,21 @@ export default {
       }
     }
   },
+  toast: {
+    position: 'top-right',
+    success: [ // Register custom toasts
+      {
+        name: 'success',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error',
+          duration: 200
+        },
+        
+      }
+    ],
+    duration: 2000
+},
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {

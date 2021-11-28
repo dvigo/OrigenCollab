@@ -1,6 +1,8 @@
 <template lang="pug">
   v-app(dark)
     v-app-bar(:clipped-left="clipped" fixed app)
+      v-btn(icon @click.stop="leftDrawer = !leftDrawer")
+        v-icon mdi-menu
       v-toolbar-title(v-text="title")
       v-spacer
       v-menu(offset-y)
@@ -16,10 +18,6 @@
             v-list-item-icon
               v-icon mdi-account-plus
             v-list-item-content Register
-          // v-list-item(v-for="item in items" :href="item.action" :target="(item.target) ? item.target : ''")
-            // v-list-item-icon(v-if="item.icon")
-              // v-icon {{ item.icon }}
-            // v-list-item-content {{ item.title}}
           v-list-item(v-if="isAuthenticated" @click="logout")
             v-list-item-icon
               v-icon mdi-run-fast
@@ -38,6 +36,17 @@
       v-list
         v-list-item
           Cart
+    v-navigation-drawer.cart(
+        v-model="leftDrawer"
+        :left="left"
+        temporary
+        fixed
+      )
+        v-list
+          v-list-item
+            v-btn(v-for="category in categories" :to="'./'+category.name")
+              v-banner
+              .text-center {{category.name}}
     v-footer(
       :absolute="!fixed"
       app)
@@ -68,9 +77,15 @@ export default {
       ],
       miniVariant: false,
       right: true,
+      left: true,
       rightDrawer: false,
-      title: 'CollabShop'
+      leftDrawer: false,
+      title: 'CollabShop',
+      category: Object
     }
+  },
+  async fetch() {
+    await this.$axios.$get('/category').then( (res) => this.categories = res.categories);
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser'])

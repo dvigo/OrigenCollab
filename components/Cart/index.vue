@@ -122,7 +122,7 @@ export default {
                             quantity: quantity,
                             })
             }
-            this.$toast.success('Product added to cart.')
+            this.$toast.success('Producte afegit correctament')
 
         },
         async deleteProductCart(productId) {

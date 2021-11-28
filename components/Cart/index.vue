@@ -121,11 +121,7 @@ export default {
                 const strings = new Set()
                 provider.awareness.getStates().forEach(state => {
                     if (state.user) {
-<<<<<<< HEAD
                         strings.push(`<span class="white--text text-h5 avatar">${state.user.name[0]}</span>`)
-=======
-                        strings.add(`<li style="color:${state.user.color};">${state.user.name}</li>`)
->>>>>>> 190638d42426de4b4a4b31904226c9fc6b08c8d7
                     }
 
                     document.querySelector('#cart-users').innerHTML = strings.join('')
@@ -170,15 +166,9 @@ export default {
             });
             this.totalPrice = price
         },
-<<<<<<< HEAD
         close() {
           $nuxt.$emit('close-cart');
         }
-=======
-        updateCurrentCart() {
-            console.log('test')
-        },
->>>>>>> 190638d42426de4b4a4b31904226c9fc6b08c8d7
     }
 }
 

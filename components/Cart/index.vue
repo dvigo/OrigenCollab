@@ -23,9 +23,9 @@
               button(v-on:click="deleteProductCart(p[1]['product']._id)" style="color:red") Delete
               v-card-title {{p[1]['quantity'] * p[1]['product'].price + '€'}}
               v-card-text {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
-      v-row.cart_total
+      v-row.cart_total(v-if="this.user.current_cart._id")
         div#card-total {{totalPrice}}€
-      v-row.cart_action
+      v-row.cart_action(v-if="this.user.current_cart._id")
         v-col
           v-btn Tramitar pedido
         v-col

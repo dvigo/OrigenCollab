@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app
     v-row
-      Product(v-for="product in products" v-bind:product="product")
+      Product(v-for="product in products" v-bind:key="product._id" v-bind:product="product")
 </template>
 
 <script>

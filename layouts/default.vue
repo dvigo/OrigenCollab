@@ -42,11 +42,10 @@
         temporary
         fixed
       )
-        v-list
-          v-list-item
-            v-btn(v-for="category in categories" :to="'/categories/'+category.name")
-              v-banner
-              .text-center {{category.name}}
+        v-row(v-for="category in categories"  v-bind:key="category._id" justify="center" align="center")
+          NuxtLink(:to="'/categories/'+category.name")
+            v-banner
+            .text-center {{category.name}}
     v-footer(
       :absolute="!fixed"
       app)

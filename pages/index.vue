@@ -4,7 +4,7 @@
       v-col(cols=12 sm=12)
         Carousel(v-bind:images="images")
     v-row
-      Product(v-for="product in products" v-bind:product="product")
+      Product(v-for="product in products" v-bind:key="product._id" v-bind:product="product")
   </v-row>
 </template>
 

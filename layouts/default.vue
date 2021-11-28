@@ -44,7 +44,7 @@
         temporary
         fixed
       )
-        .text-h4.categoryText Categorías
+        .text-h4.categoryText Categories
         v-row(v-for="category in categories"  v-bind:key="category._id" justify="center" align="center")
           NuxtLink.categoryLink(:to="'/categories/'+category.name")
             .text-h5 {{category.name}}

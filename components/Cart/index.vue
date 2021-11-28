@@ -10,7 +10,7 @@
             v-banner
               v-card-title {{p[1]['product'].name }}
             v-card.cart_product
-              button(v-on:click="deleteProductCart(p[1]['product'].id)" style="color:red") Delete
+              button(v-on:click="deleteProductCart(p[1]['product']._id)" style="color:red") Delete
               v-card-title {{p[1]['quantity'] * p[1]['product'].price + '€'}}
               v-card-text {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
       v-row.cart_total
@@ -23,13 +23,16 @@
       v-row
         ul#cart-users
 
+
 </template>
 
 <script>
 import * as Y from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 
+
 export default {
+    name: "Cart",
     components: {
     },
     data () {
@@ -39,8 +42,15 @@ export default {
             totalPrice: 0
         }
     },
+    computed: {
+    },
     mounted() {
         this.loadYji();
+    },
+    created() {
+       this.$nuxt.$on('update-cart', (product, quantity) => {
+           this.updateCart(product, quantity)
+       })
     },
     methods: {
         getRandomColor() {
@@ -63,14 +73,6 @@ export default {
                 });
             return result;
         },
-        async getProduct(productId) {
-            var product_filtered = this.products.filter(p => p.id === productId)
-            if (product_filtered.length <= 0) {
-                // Fetch from api
-                return {id: 2, name: 'Product 2', price: 10, description: 'teskto'}
-            }
-            return product_filtered[0]
-        },
         async loadYji() {
             const ydoc = new Y.Doc()
             this.cart = ydoc.getMap('cart')
@@ -80,7 +82,7 @@ export default {
             })
 
             const provider = new WebsocketProvider('ws://localhost:1234',
-                this.findGetParameter('room') ||  'no-room', ydoc)
+                this.user.current_cart, ydoc)
 
             provider.awareness.setLocalStateField('user', {
                     name: this.user ? this.user.first_name + ' ' + this.user.last_name:'User ' + this.getRandomColor(),
@@ -103,28 +105,30 @@ export default {
 
         },
         async updateCart(product, quantity) {
-            this.$forceUpdate();
             if (!quantity) {
-                quantity = document.getElementById('add-product-quantity-' + product.id).value || 1
+                var div = document.getElementById('add-product-quantity-' + product._id)
+                quantity = div?div.value:1
             }
             quantity = parseInt(quantity)
-            const existing_product = this.cart.get(product.id.toString())
+            const existing_product = this.cart.get(product._id)
             if (existing_product) {
-                this.cart.set(product.id.toString(), {
+                this.cart.set(product._id, {
                             product: product,
                             quantity: existing_product.quantity + quantity,
                             })
             } else {
-                this.cart.set(product.id.toString(), {
+                this.cart.set(product._id, {
                             product: product,
                             quantity: quantity,
                             })
             }
         },
         async deleteProductCart(productId) {
-            this.cart.delete(productId.toString())
+            console.log(productId)
+            this.cart.delete(productId)
         },
         updateTotal() {
+            this.$emit('update-card', 'hi');
             var price = 0
             this.cart.forEach(function(p) {
                 price += p.product.price * p.quantity

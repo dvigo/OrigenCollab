@@ -85,7 +85,7 @@ export default {
         checkoutCart() {
             var edit_str = ""
             this.cart.forEach(function(item) {
-                 edit_str += item.product.name + "," + parseInt(item.quantity) + "," + parseInt(item.product.price) + "," + item.product.description + "&|&"
+                 edit_str += item.product.name + "," + parseInt(item.quantity) + "," + parseInt(item.product.price) + ";;"
             });
 
             var cart = undefined
@@ -96,14 +96,16 @@ export default {
                         return r._id === this.user.current_cart
 
                 })
-                if (!cart.length){
-                    cart = cart[0]
-                }
+                cart = cart[0]
             }
-            edit_str += '~~users=' + cart.users.join(',')
-            edit_str += '~~cart=' + this.user.current_cart._id
+            if (cart && cart.users) {
+                edit_str += '~users=' + cart.users.join(',')
+            } else {
+                edit_str += '~users='
+            }
+            edit_str += '~cart=' + this.user.current_cart._id
             edit_str = edit_str.replace('/', '#slash#')
-            this.$router.push('/checkout/' + edit_str);
+            this.$router.push('/checkout/' + encodeURI(edit_str));
             this.$store.commit('changeCurrentCart', cart[0])
             this.$axios.$patch('/user/' + this.user.email, {'current_cart': undefined})
             this.provider.disconnect()

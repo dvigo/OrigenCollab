@@ -12,14 +12,12 @@
               thead
                 tr
                   th Name
-                  th Description
                   th Quantity
                   th Price per unit
                   th Total Price
               tbody
                 tr(v-for="p in cart")
                   td {{ p.name }}
-                  td {{ p.description }}
                   td {{ p.quantity }}
                   td {{ p.price }}
                   td {{ p.price * p.quantity }}
@@ -92,16 +90,18 @@ export default {
         loadItems() {
             const test = $nuxt.$route.path.split('/checkout/')[1].replace('#slash#', '/')
             console.log([test])
-            var users = test.split('~~users=')[1].split('~~cart=')[0]
-            this.cart_id = test.split('~~users=')[1].split('~~cart=')[1]
-            const items = test.split('~~users=')[0]
+            var users = test.split('~users=')[1].split('~cart=')[0]
+            this.cart_id = test.split('~users=')[1].split('~cart=')[1]
+            const items = test.split('~users=')[0]
             self = this
             users.split(',').forEach(function(u) {
                 self.users.push({email: u})
             });
-            items.split('&|&').forEach(function(item) {
+            items.split(';;').forEach(function(item) {
                 const values = decodeURI(item).split(',')
-                self.cart.push({name: values[0], quantity: values[1], price: values[2], description: values[3]})
+                if (values[0] && values[1] && values[2]) {
+                    self.cart.push({name: values[0], quantity: values[1], price: values[2]})
+                }
             });
         },
         async nextStep () {

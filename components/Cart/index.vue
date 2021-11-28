@@ -36,7 +36,11 @@
         v-col
           v-btn(v-on:click="checkoutCart") Checkout
         v-col
+<<<<<<< Updated upstream
           v-btn(v-on:close="close") Seguir comprando
+=======
+          v-btn(v-on:click="close()") Keep Buying
+>>>>>>> Stashed changes
       v-row
         ul#cart-users
 </template>
@@ -83,6 +87,18 @@ export default {
     },
     methods: {
         checkoutCart() {
+            var edit_str = ""
+            this.cart.forEach(function(item) {
+                 edit_str += item.product.name + "," + parseInt(item.quantity) + "," + parseInt(item.product.price) + "," + item.product.description + "&|&"
+            });
+
+            var cart = this.available_carts.filter((r) => {
+                    return r._id == this.user.current_cart
+            })
+            edit_str += '~~users=' + cart[0].users.join(',')
+            edit_str += '~~cart=' + this.user.current_cart
+            this.$router.push('/checkout/' + edit_str);
+            this.close()
         },
         changeSelect(event) {
             var cart = this.available_carts.filter((r) => {
@@ -233,7 +249,7 @@ export default {
         },
         close() {
           $nuxt.$emit('close-cart');
-        }
+        },
     }
 }
 

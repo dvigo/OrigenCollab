@@ -90,7 +90,8 @@ export default {
     },
   methods: {
         loadItems() {
-            const test = $nuxt.$route.path.split('/checkout/')[1]
+            const test = $nuxt.$route.path.split('/checkout/')[1].replace('#slash#', '/')
+            console.log([test])
             var users = test.split('~~users=')[1].split('~~cart=')[0]
             this.cart_id = test.split('~~users=')[1].split('~~cart=')[1]
             const items = test.split('~~users=')[0]

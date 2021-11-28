@@ -88,12 +88,25 @@ export default {
                  edit_str += item.product.name + "," + parseInt(item.quantity) + "," + parseInt(item.product.price) + "," + item.product.description + "&|&"
             });
 
-            var cart = this.available_carts.filter((r) => {
-                    return r._id == this.user.current_cart
-            })
-            edit_str += '~~users=' + cart[0].users.join(',')
-            edit_str += '~~cart=' + this.user.current_cart
+            var cart = undefined
+            if (this.available_carts.length == 1) {
+                cart = this.available_carts[0]
+            } else {
+                cart = this.available_carts.filter((r) => {
+                        return r._id === this.user.current_cart
+
+                })
+                if (!cart.length){
+                    cart = cart[0]
+                }
+            }
+            edit_str += '~~users=' + cart.users.join(',')
+            edit_str += '~~cart=' + this.user.current_cart._id
+            edit_str = edit_str.replace('/', '#slash#')
             this.$router.push('/checkout/' + edit_str);
+            this.$store.commit('changeCurrentCart', cart[0])
+            this.$axios.$patch('/user/' + this.user.email, {'current_cart': undefined})
+            this.provider.disconnect()
             this.close()
         },
         changeSelect(event) {

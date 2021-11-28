@@ -29,8 +29,7 @@
     v-main
       v-container
         Nuxt
-    v-navigation-drawer(
-      class="cart"
+    v-navigation-drawer.cart(
       v-model="rightDrawer"
       :right="right"
       temporary

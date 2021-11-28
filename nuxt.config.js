@@ -43,6 +43,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
     '@nuxtjs/auth'
   ],
 
@@ -63,7 +64,7 @@ export default {
         },
         endpoints: {
           login: { url: '/auth', method: 'post', propertyName: 'token' },
-          user: { url: '/auth/profile', method: 'get', 
+          user: { url: '/auth/profile', method: 'get',
           logout: false,
           propertyName: false }
         },

@@ -122,6 +122,8 @@ export default {
                             quantity: quantity,
                             })
             }
+            this.$toast.success('Product added to cart.')
+
         },
         async deleteProductCart(productId) {
             console.log(productId)

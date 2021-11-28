@@ -4,16 +4,23 @@
       v-row
         v-col
           h2.text-center Cistella
-          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id")
+          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()")
         v-spacer
         v-col
           v-card-actions
             v-icon(v-on:click="toggleTest()") mdi-plus
+            v-icon(v-on:click="toggleMembers()") mdi-folder-account
       v-row#newCart(style="display:none;")
         v-col
           v-text-field#new-cart-name New Cart Name
-        v-vol
-          v-btn(@click="createNewCart") Create
+        v-col
+          v-btn(v-on:click="createNewCart()") Create
+
+      v-row#addUserCart(style="display:none;")
+        v-col
+          v-text-field#new-cart-members Insert members separated per commas
+        v-col
+          v-btn(v-on:click="newCartMembers()") Share
       v-row.products
         v-col
           div#cart-products(v-for="p in cart")
@@ -49,7 +56,11 @@ export default {
             available_carts: [],
             cart: undefined,
             rooms: [],
-            totalPrice: 0
+            totalPrice: 0,
+            selectDefault: {
+                name: this.user?this.user.current_cart.name:'',
+                _id: this.user?this.user.current_cart._id:'',
+                }
         }
     },
     computed: {
@@ -66,16 +77,40 @@ export default {
         await this.$axios.$get('/cart').then( (res) => this.available_carts = res.carts);
     },
     methods: {
+        changeSelect(event) {
+            var value = document.getElementById('available_carts').value()
+            console.log(this.rooms)
+            //this.rooms.filter( ( r ) => {
+            //    return category.name === 'Sneakers';
+            //})[ 0 ].products;
+
+        },
         async createNewCart() {
             var name = document.getElementById('new-cart-name')
             self = this
             await this.$axios.$post('/cart', {'name': name?name.value:'New cart'}).then((res) => {
+                this.user.current_cart = res['carts'][0]
                 self.$fetch;
-                console.log(res)
-                    })
+                this.$toast.success('Cart afegit correctament')
+            })
+        },
+        async newCartMembers() {
+            var name = document.getElementById('new-cart-members')
+            self = this
+            await this.$axios.$patch('/cart/' + this.user.current_cart._id, {'users': this.user.email + ',' + name.value}).then((res) => {
+                this.$toast.success('Members afegits correctament')
+            })
         },
         toggleTest() {
             const div = document.getElementById('newCart')
+            if (div.style.display == 'none') {
+                div.style.display = ''
+            } else {
+                div.style.display = 'none'
+            }
+        },
+        toggleMembers() {
+            const div = document.getElementById('addUserCart')
             if (div.style.display == 'none') {
                 div.style.display = ''
             } else {
@@ -121,7 +156,7 @@ export default {
                 const strings = new Set()
                 provider.awareness.getStates().forEach(state => {
                     if (state.user) {
-                        strings.push(`<span class="white--text text-h5 avatar">${state.user.name[0]}</span>`)
+                        strings.add(`<span class="white--text text-h5 avatar">${state.user.name[0]}</span>`)
                     }
 
                     document.querySelector('#cart-users').innerHTML = strings.join('')

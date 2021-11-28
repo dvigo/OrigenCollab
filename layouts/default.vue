@@ -44,7 +44,7 @@
       )
         v-list
           v-list-item
-            v-btn(v-for="category in categories" :to="'./'+category.name")
+            v-btn(v-for="category in categories" :to="'/categories/'+category.name")
               v-banner
               .text-center {{category.name}}
     v-footer(

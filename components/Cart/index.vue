@@ -4,6 +4,16 @@
       v-row
         v-col
           h2.text-center Cistella
+          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id")
+        v-spacer
+        v-col
+          v-card-actions
+            v-icon(v-on:click="toggleTest()") mdi-plus
+      v-row#newCart(style="display:none;")
+        v-col
+          v-text-field#new-cart-name New Cart Name
+        v-vol
+          v-btn(@click="createNewCart") Create
       v-row.products
         v-col
           div#cart-products(v-for="p in cart")
@@ -22,8 +32,6 @@
           v-btn Seguir comprando
       v-row
         ul#cart-users
-
-
 </template>
 
 <script>
@@ -38,7 +46,9 @@ export default {
     data () {
         return {
             user: this.$auth.user,
-            cart: [],
+            available_carts: [],
+            cart: undefined,
+            rooms: [],
             totalPrice: 0
         }
     },
@@ -52,7 +62,26 @@ export default {
            this.updateCart(product, quantity)
        })
     },
+    async fetch() {
+        await this.$axios.$get('/cart').then( (res) => this.available_carts = res.carts);
+    },
     methods: {
+        async createNewCart() {
+            var name = document.getElementById('new-cart-name')
+            self = this
+            await this.$axios.$post('/cart', {'name': name?name.value:'New cart'}).then((res) => {
+                self.$fetch;
+                console.log(res)
+                    })
+        },
+        toggleTest() {
+            const div = document.getElementById('newCart')
+            if (div.style.display == 'none') {
+                div.style.display = ''
+            } else {
+                div.style.display = 'none'
+            }
+        },
         getRandomColor() {
             var letters = '0123456789ABCDEF';
             var color = '#';
@@ -82,19 +111,19 @@ export default {
             })
 
             const provider = new WebsocketProvider('ws://localhost:1234',
-                this.user.current_cart, ydoc)
+                this.user.current_cart._id, ydoc)
 
             provider.awareness.setLocalStateField('user', {
                     name: this.user ? this.user.first_name + ' ' + this.user.last_name:'User ' + this.getRandomColor(),
-                color: this.getRandomColor()
+                    color: this.user.current_cart.color?this.user.current_cart.color:this.getRandomColor()
             })
             provider.awareness.on('change', () => {
-                // Map each awareness state to a dom-string
-                const strings = []
+                const strings = new Set()
                 provider.awareness.getStates().forEach(state => {
                     if (state.user) {
-                        strings.push(`<li style="color:${state.user.color};">${state.user.name}</li>`)
+                        strings.add(`<li style="color:${state.user.color};">${state.user.name}</li>`)
                     }
+
                     document.querySelector('#cart-users').innerHTML = strings.join('')
                 })
             })
@@ -136,7 +165,10 @@ export default {
                 price += p.product.price * p.quantity
             });
             this.totalPrice = price
-        }
+        },
+        updateCurrentCart() {
+            console.log('test')
+        },
     }
 }
 

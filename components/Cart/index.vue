@@ -4,7 +4,7 @@
       v-row
         v-col
           h2.text-center Cistella
-          v-select#cart-select(:items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()" v-model="selectDefault")
+          v-select#cart-select(v-if="this.user && this.user.current_cart" :items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()" v-model="selectDefault")
         v-spacer
         v-col
           v-card-actions
@@ -12,13 +12,13 @@
             v-icon(v-on:click="toggleMembers()") mdi-folder-account
       v-row#newCart(style="display:none;")
         v-col
-          v-text-field#new-cart-name New Cart Name
+          v-text-field#new-cart-name(name="new") New Cart Name
         v-col
           v-btn(v-on:click="createNewCart()") Create
 
       v-row#addUserCart(style="display:none;")
         v-col
-          v-text-field#new-cart-members Insert members separated per commas
+          v-text-field#new-cart-members(name="members") Insert members separated per commas
         v-col
           v-btn(v-on:click="newCartMembers()") Share
       v-row.products
@@ -30,9 +30,9 @@
               button(v-on:click="deleteProductCart(p[1]['product']._id)" style="color:red") Delete
               v-card-title {{p[1]['quantity'] * p[1]['product'].price + '€'}}
               v-card-text {{p[1]['quantity'] + 'x' + p[1]['product'].price + '€'}}
-      v-row.cart_total(v-if="this.user")
+      v-row.cart_total(v-if="this.user && this.user.current_cart")
         div#card-total {{totalPrice}}€
-      v-row.cart_action(v-if="this.user")
+      v-row.cart_action(v-if="this.user && this.user.current_cart")
         v-col
           v-btn Tramitar pedido
         v-col
@@ -66,6 +66,7 @@ export default {
     computed: {
     },
     mounted() {
+        console.log(this.$store.getCurrentCart)
         this.loadYji();
     },
     created() {
@@ -74,7 +75,12 @@ export default {
        })
     },
     async fetch() {
-        await this.$axios.$get('/cart').then( (res) => this.available_carts = res.carts);
+        await this.$axios.$get('/cart').then( (res) => {
+                this.available_carts = res['carts']
+                if (res['carts'].length == 1) {
+                    this.$store.commit('changeCurrentCart', res['carts'][0])
+                }
+                });
     },
     methods: {
         changeSelect(event) {
@@ -84,7 +90,6 @@ export default {
             this.$store.commit('changeCurrentCart', cart[0])
             this.$axios.$patch('/user/' + this.user.email, {'current_cart': this.selectDefault})
             if (this.provider) {
-                console.log(this.provider)
                 this.provider.disconnect()
             }
             this.loadYji();
@@ -97,11 +102,13 @@ export default {
                 this.$axios.$patch('/user/' + this.user.email, {'current_cart': res['carts']._id})
                 this.$store.commit('changeCurrentCart', res['carts'])
                 this.selectDefault = {name: res['carts'].name, _id: res['carts']._id}
+                this.available_carts.push({name: res['carts'].name, _id: res['carts']._id})
                 if (this.provider) {
                     this.provider.disconnect()
                 }
                 this.loadYji();
                 this.updateTotal()
+                this.toggleTest()
                 self.$fetch;
                 this.$toast.success('Cart afegit correctament')
             })
@@ -109,8 +116,13 @@ export default {
         async newCartMembers() {
             var name = document.getElementById('new-cart-members')
             self = this
-            await this.$axios.$patch('/cart/' + this.user.current_cart._id, {'users': this.user.email + ',' + name.value}).then((res) => {
+            var users = [this.user.email]
+            name.value.split(',').forEach(function(user) {
+                    users.push(user)
+            });
+            await this.$axios.$patch('/cart/' + this.user.current_cart._id, {'users': users}).then((res) => {
                 this.$toast.success('Members afegits correctament')
+                this.toggleMembers()
             })
         },
         toggleTest() {
@@ -150,6 +162,9 @@ export default {
             return result;
         },
         async loadYji() {
+            if (!this.user || !this.user.current_cart) {
+                return
+            }
             const ydoc = new Y.Doc()
             this.cart = ydoc.getMap('cart')
             this.cart.observe(event => {

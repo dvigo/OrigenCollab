@@ -4,6 +4,9 @@ export const getters = {
     },
     loggedInUser (state) {
       return state.auth.user
+    },
+    getCurrentCart(state) {
+        return state.auth.user.current_cart
     }
   }
 

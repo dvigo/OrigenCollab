@@ -36,11 +36,7 @@
         v-col
           v-btn(v-on:click="checkoutCart") Checkout
         v-col
-<<<<<<< Updated upstream
-          v-btn(v-on:close="close") Seguir comprando
-=======
           v-btn(v-on:click="close()") Keep Buying
->>>>>>> Stashed changes
       v-row
         ul#cart-users
 </template>

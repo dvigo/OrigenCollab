@@ -3,7 +3,8 @@
     v-app-bar(:clipped-left="clipped" fixed app)
       v-btn(icon @click.stop="leftDrawer = !leftDrawer")
         v-icon mdi-menu
-      v-toolbar-title(v-text="title")
+      NuxtLink.homeLink(to="/")
+        v-toolbar-title(v-text="title")
       v-spacer
       v-menu(offset-y)
         template(v-slot:activator="{ on, attrs }")

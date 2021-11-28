@@ -1,7 +1,7 @@
 <template lang="pug">
   v-flex(class='text-xs-center')
     v-container
-      v-row
+      v-row(justify="center" align="center")
         v-col
           h2.text-center Cart
           v-select#cart-select(v-if="this.user && this.user.current_cart" :items="available_carts" item-text="name" item-value="_id" v-on:change="changeSelect()" v-model="selectDefault")
@@ -10,7 +10,7 @@
           v-card-actions
             v-icon(v-on:click="toggleTest()") mdi-plus
             v-icon(v-on:click="toggleMembers()") mdi-folder-account
-      v-row#newCart(style="display:none;")
+      v-row#newCart(style="display:none;" justify="center" align="center")
         v-col
           v-text-field#new-cart-name(name="new") New Cart Name
         v-col
